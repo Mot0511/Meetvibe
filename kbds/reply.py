@@ -19,4 +19,17 @@ kb_location = ReplyKeyboardMarkup(keyboard=[
     ]
 ], resize_keyboard=True)
 
+kb_menu = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(text='Начать поиск'),
+        KeyboardButton(text='Моя анкета'),
+    ]
+], resize_keyboard=True)
+
+kb_skip = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(text='Пропустить'),
+    ]
+], resize_keyboard=True)
+
 remove = ReplyKeyboardRemove()
