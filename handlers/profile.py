@@ -75,7 +75,7 @@ async def name(mess: types.Message, state: FSMContext):
 async def age(mess: types.Message, state: FSMContext):
     await state.update_data(age=mess.text)
 
-    await mess.answer(text='Какой у тебя пол', reply_markup=reply.get_keyboard('Мужской', 'Женский'))
+    await mess.answer(text='Какой у тебя пол', reply_markup=reply.kb_gender)
     await state.set_state(Profile.gender)
 
 @register_router.message(Profile.gender, F.text)
@@ -96,7 +96,7 @@ async def city(mess: types.Message, state: FSMContext):
 
 @register_router.message(Profile.city, F.location)
 async def location(mess: types.Message, state: FSMContext):
-    await state.update_data(location=str(dict(mess.location)))
+    await state.update_data(location=str([mess.location.latitude, mess.location.longitude]))
     city = get_city(str(mess.location.latitude), str(mess.location.longitude))
     await state.update_data(city=city)
 

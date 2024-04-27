@@ -32,4 +32,11 @@ kb_skip = ReplyKeyboardMarkup(keyboard=[
     ]
 ], resize_keyboard=True)
 
+kb_gender = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(text='Мужской'),
+        KeyboardButton(text='Женский'),
+    ]
+], resize_keyboard=True)
+
 remove = ReplyKeyboardRemove()

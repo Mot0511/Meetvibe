@@ -37,7 +37,12 @@ async def edit_user(session: AsyncSession, data):
 async def get_user(session: AsyncSession, user_id):
     query = select(Profile).where(user_id == user_id)
     data = await session.execute(query)
+    print(data)
     return data.scalar()
+
+async def get_users(session: AsyncSession, query):
+    data = await session.execute(query)
+    return data.scalars().all()
 
 async def get_all_ids(session: AsyncSession):
     query = select(Profile.user_id)
