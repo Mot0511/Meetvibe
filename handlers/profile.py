@@ -19,6 +19,7 @@ register_router = Router()
 @register_router.message(F.text == 'Моя анкета')
 async def profile(mess: types.Message, session: AsyncSession):
     profile = await get_user(session, mess.from_user.id)
+    profile.distance = 12000000
 
     await mess.answer_photo(photo=profile.photo, caption=get_info(profile), parse_mode=ParseMode.HTML, reply_markup=reply.get_keyboard('Изменить анкету', 'Главное меню'))
 
@@ -131,7 +132,6 @@ async def photo(mess: types.Message, state: FSMContext, session: AsyncSession):
     await state.update_data(photo=mess.photo[-1].file_id)
 
     await state.update_data(user_id=mess.from_user.id)
-    await state.update_data(username=mess.from_user.username)
     data = await state.get_data()
 
     if (data['isEditing'] == True):

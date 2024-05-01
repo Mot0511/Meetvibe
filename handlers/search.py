@@ -69,16 +69,18 @@ async def callback_allow(callback: types.CallbackQuery, session: AsyncSession):
     user_id1 = callback.data.split('_')[1]
     user_id2 = callback.from_user.id
     user1 = await get_user(session, user_id=user_id1)
-    user2 = await get_user(session, user_id=user_id1)
-    name1 = user1.name
-    name2 = user2.name
-    username1 = user1.username
-    username2 = user2.username
+    user2 = await get_user(session, user_id=user_id2)
 
     await callback.message.answer(text=f'\
 <b>Пара создана:</b>\n\
-{name1} - @{username1 if username1 else user_id1}\n\
-{name2} - @{username2 if username2 else user_id2}', parse_mode=ParseMode.HTML)
+<a href="tg://user?id={user_id1}">{user1.name}</a> - \
+<a href="tg://user?id={user_id2}">{user2.name}</a>', parse_mode='html')
+    
+    
+    await bot.send_message(user_id1, text=f'\
+<b>Пара создана:</b>\n\
+<a href="tg://user?id={user_id2}">{user2.name}</a> - \
+<a href="tg://user?id={user_id1}">{user1.name}</a>', parse_mode='html')
 
     await callback.answer()
 

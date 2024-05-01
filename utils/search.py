@@ -5,8 +5,6 @@ from schemas.Profile import Profile
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.models import Profile
-from aiogram.fsm.context import FSMContext
-
 from utils.get_distance import get_distance
 from utils.get_hobbies_prop import get_hobbies_prop
 

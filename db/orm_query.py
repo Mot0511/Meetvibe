@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 async def add_user(session: AsyncSession, data):
     obj = Profile(
         user_id = data['user_id'],
-        chat_id = data['chat_id'],
         name = data['name'],
         age = data['age'],
         gender = data['gender'],
@@ -23,7 +22,6 @@ async def add_user(session: AsyncSession, data):
 async def edit_user(session: AsyncSession, data):
     query = update(Profile).where(Profile.user_id == data['user_id']).values(
         user_id = data['user_id'],
-        chat_id = data['chat_id'],
         name = data['name'],
         age = data['age'],
         gender = data['gender'],
