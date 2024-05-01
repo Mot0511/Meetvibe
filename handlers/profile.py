@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.enums.parse_mode import ParseMode
 
 from utils.get_city import get_city
+from utils.get_info import get_info
 
 register_router = Router()
 
@@ -19,16 +20,7 @@ register_router = Router()
 async def profile(mess: types.Message, session: AsyncSession):
     profile = await get_user(session, mess.from_user.id)
 
-    hobbies_str = ''
-    print(profile.hobbies)
-    for hobby in json.loads(profile.hobbies):
-        hobbies_str += hobby + ', '
-
-    await mess.answer_photo(photo=profile.photo, caption=f'\
-<b>{profile.name}</b>, <b>{int(profile.age)} лет</b>, <b>{profile.city}</b>\n\
-{( profile.school and f'<b>Школа: {int(profile.school)}</b>\n')}\
-<b>Интересы: {hobbies_str}</b>\n\
-{(profile.description and profile.description)}', parse_mode=ParseMode.HTML, reply_markup=reply.get_keyboard('Изменить анкету', 'Главное меню'))
+    await mess.answer_photo(photo=profile.photo, caption=get_info(profile), parse_mode=ParseMode.HTML, reply_markup=reply.get_keyboard('Изменить анкету', 'Главное меню'))
 
 class Profile(StatesGroup):
     user_id = State()
@@ -41,8 +33,7 @@ class Profile(StatesGroup):
     hobbies = State()
     photo = State()
     description = State()
-
-    isEditing = State()
+    isEditing = State(state=False)
 
 @register_router.message(Command('reset'))
 async def name(mess: types.Message, state: FSMContext):
@@ -55,6 +46,7 @@ async def start(mess: types.Message, state: FSMContext):
 
     await mess.answer(text='Я вижу, что ты здесь впервые. Давай создадим анкету')
     await mess.answer(text='Как тебя зовут?', reply_markup=reply.remove)
+    await state.update_data(isEditing=False)
     await state.set_state(Profile.name)
 
 @register_router.message(StateFilter(None), F.text == 'Изменить анкету')
@@ -117,6 +109,7 @@ async def school(mess: types.Message, state: FSMContext):
 @register_router.message(Profile.hobbies, F.text)
 async def hobbies(mess: types.Message, state: FSMContext):
     hobbies = mess.text.split(', ')
+    hobbies = [hobby.lower() for hobby in hobbies]
     await state.update_data(hobbies=json.dumps(hobbies))
 
     await mess.answer(text='Можешь еще написать описание себя', reply_markup=reply.kb_skip)
@@ -138,6 +131,7 @@ async def photo(mess: types.Message, state: FSMContext, session: AsyncSession):
     await state.update_data(photo=mess.photo[-1].file_id)
 
     await state.update_data(user_id=mess.from_user.id)
+    await state.update_data(username=mess.from_user.username)
     data = await state.get_data()
 
     if (data['isEditing'] == True):

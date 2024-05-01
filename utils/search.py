@@ -16,15 +16,18 @@ async def search(id: int, gender: str, session: AsyncSession):
     age = userdata.age
     city = userdata.city
 
-    query = select(Profile).order_by(func.random()).limit(5).where( and_(Profile.gender == gender, Profile.age >= (age - 2), Profile.age <= (age + 2), Profile.city == city, Profile.user_id != id))
+    query = select(Profile).order_by(func.random()).where( and_(Profile.gender == gender, Profile.age >= (age - 2), Profile.age <= (age + 2), Profile.city == city, Profile.user_id != id))
     users = await get_users(session, query)
 
     users = add_distances(userdata, users)
     users = add_hobbies_props(userdata, users)
-    
-    users = sort(users)
 
-    return users
+    users_my_school = sort([user for user in users if user.school == userdata.school])
+    users_other_school = sort([user for user in users if not user.school == userdata.school])
+    
+    users_my_school.extend(users_other_school)
+
+    return users_my_school
 
 def sort(users):
     N = len(users)
@@ -63,4 +66,4 @@ def add_distances(userdata, users):
     
     return res
 
-["\u0444\u0443\u0442\u0431\u043e\u043b", "\u0441\u043f\u043e\u0440\u0442"]
+# ["\u0444\u0443\u0442\u0431\u043e\u043b", "\u0441\u043f\u043e\u0440\u0442"]

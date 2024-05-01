@@ -1,14 +1,15 @@
 from sqlalchemy import Numeric, String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 class Profile(Base):
     __tablename__ = 'profile'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column()
+    username: Mapped[str] = mapped_column(String(150))
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     age: Mapped[int] = mapped_column(Numeric(100), nullable=False)
     gender: Mapped[str] = mapped_column(String(150), nullable=False)
@@ -18,3 +19,10 @@ class Profile(Base):
     hobbies: Mapped[str] = mapped_column(String(150), nullable=False)
     description: Mapped[str] = mapped_column(String(150))
     photo: Mapped[str] = mapped_column(String(150), nullable=False)
+
+class Request(Base):
+    __tablename__ = 'request'
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    to_id: Mapped[int] = mapped_column(nullable=False)
+    from_id: Mapped[int] = mapped_column(nullable=False)

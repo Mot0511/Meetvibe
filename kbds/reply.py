@@ -1,10 +1,11 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
+from typing import Tuple
 
 def get_keyboard(
     *btns,
     placeholder: str = None,
-    sizes: tuple[int] = (2,),
+    sizes: Tuple[int] = (2,),
 ):
     keyboard = ReplyKeyboardBuilder()
     for btn in btns:
@@ -36,6 +37,16 @@ kb_gender = ReplyKeyboardMarkup(keyboard=[
     [
         KeyboardButton(text='Мужской'),
         KeyboardButton(text='Женский'),
+    ]
+], resize_keyboard=True)
+
+kb_select = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(text='✅'),
+        KeyboardButton(text='❌'),
+    ],
+    [
+        KeyboardButton(text='Выйти')
     ]
 ], resize_keyboard=True)
 

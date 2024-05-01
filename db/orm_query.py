@@ -1,10 +1,12 @@
 from sqlalchemy import select, update
 from db.models import Profile
+from db.models import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 async def add_user(session: AsyncSession, data):
     obj = Profile(
         user_id = data['user_id'],
+        chat_id = data['chat_id'],
         name = data['name'],
         age = data['age'],
         gender = data['gender'],
@@ -21,6 +23,7 @@ async def add_user(session: AsyncSession, data):
 async def edit_user(session: AsyncSession, data):
     query = update(Profile).where(Profile.user_id == data['user_id']).values(
         user_id = data['user_id'],
+        chat_id = data['chat_id'],
         name = data['name'],
         age = data['age'],
         gender = data['gender'],
@@ -35,7 +38,7 @@ async def edit_user(session: AsyncSession, data):
     await session.commit()
 
 async def get_user(session: AsyncSession, user_id):
-    query = select(Profile).where(user_id == user_id)
+    query = select(Profile).where(Profile.user_id == user_id)
     data = await session.execute(query)
     print(data)
     return data.scalar()
@@ -48,3 +51,8 @@ async def get_all_ids(session: AsyncSession):
     query = select(Profile.user_id)
     data = await session.execute(query)
     return data.scalars().all()
+
+async def send_request(data, session: AsyncSession):
+    obj = Request(**data)
+    session.add(obj)
+    await session.commit()
