@@ -9,24 +9,27 @@ from db.engine import create_db, session_maker
 from kbds import reply
 from aiogram import F
 from config import TOKEN
+from utils.search import set_is_demo
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 @dp.message(CommandStart(), isRegistered(session_maker()))
 async def start(mess: types.Message):
+    set_is_demo(False)
     await mess.answer(text='Привет! Meetvibe - это бот для знакомств по интересам', reply_markup=reply.kb_menu)
 
 @dp.message((F.text == 'Главное меню') | (F.text == 'Выйти'))
 async def main_menu(mess: types.Message):
     await mess.answer(text='Главное меню:', reply_markup=reply.kb_menu)
 
+@dp.message(Command('demo'))
+async def demo(mess: types.Message):
+    set_is_demo(True)
+    await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
 
 dp.include_router(register_router)
 dp.include_router(search_router)
-
-async def send_photo(user_id, photo, caption):
-    await bot.send_photo(user_id, photo=photo, caption=caption)
 
 async def on_startup():
     # await drop_db()

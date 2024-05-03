@@ -1,5 +1,5 @@
 import json
-from sqlalchemy import and_, select, func
+from sqlalchemy import and_, or_, select, func
 from db.orm_query import get_user, get_users
 from schemas.Profile import Profile
 from typing import List
@@ -8,13 +8,24 @@ from db.models import Profile
 from utils.get_distance import get_distance
 from utils.get_hobbies_prop import get_hobbies_prop
 
+isDemo = False
+
+def set_is_demo(mode):
+    global isDemo
+    isDemo = mode
 
 async def search(id: int, gender: str, session: AsyncSession):
+    global isDemo
     userdata = await get_user(session, id)
     age = userdata.age
     city = userdata.city
 
     query = select(Profile).order_by(func.random()).where( and_(Profile.gender == gender, Profile.age >= (age - 2), Profile.age <= (age + 2), Profile.city == city, Profile.user_id != id))
+    if isDemo:
+        query = query.where(or_(Profile.user_id == 1, Profile.user_id == 1275580390))
+    else:
+        query = query.where(and_(Profile.user_id != 1, Profile.user_id != 1275580390))
+
     users = await get_users(session, query)
 
     users = add_distances(userdata, users)
