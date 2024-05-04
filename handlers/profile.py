@@ -1,16 +1,14 @@
 import json
-from atexit import register
 from aiogram import Router, F
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart, Command
 from aiogram import types
+from aiogram.enums.parse_mode import ParseMode
 from db.orm_query import add_user, edit_user, get_user
 from kbds import reply
 from sqlalchemy.ext.asyncio import AsyncSession
-from aiogram.enums.parse_mode import ParseMode
-
 from utils.get_city import get_city
 from utils.get_info import get_info
 

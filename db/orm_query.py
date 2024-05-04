@@ -1,7 +1,7 @@
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 from db.models import Profile
 from db.models import Request
-from sqlalchemy.ext.asyncio import AsyncSession
 
 async def add_user(session: AsyncSession, data):
     obj = Profile(

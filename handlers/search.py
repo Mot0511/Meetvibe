@@ -1,16 +1,16 @@
 import json
-from aiogram import Router, F, types
-from utils.search import search
+from config import TOKEN
+from aiogram import Bot, Router, F, types
 from aiogram.enums.parse_mode import ParseMode
-from kbds import reply, inline
-from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-from db.orm_query import send_request
-from utils.get_info import get_info
-from aiogram import Bot
-from config import TOKEN
+from kbds import reply, inline
+from sqlalchemy.ext.asyncio import AsyncSession
 from db.orm_query import get_user
+from db.orm_query import send_request
+from utils.get_distance import get_distance
+from utils.get_info import get_info
+from utils.search import search
 
 bot = Bot(token=TOKEN)
 search_router = Router()
@@ -39,9 +39,11 @@ async def start_search(mess: types.Message, session: AsyncSession, state: FSMCon
 async def allow(mess: types.Message, state: FSMContext, session: AsyncSession):
     queue_data = await state.get_data()
     current_user = queue_data['current_user']
+    user = await get_user(session, mess.from_user.id)
+    user.distance = get_distance(json.loads(user.location), json.loads(current_user.location))
 
     await bot.send_message(current_user.user_id, text='<b>Ты кому-то понравился(ась)</b>:', parse_mode=ParseMode.HTML)
-    await bot.send_photo(current_user.user_id, photo=current_user.photo, caption=get_info(current_user), parse_mode=ParseMode.HTML, reply_markup=inline.get_allow_kb(mess.from_user.id))
+    await bot.send_photo(current_user.user_id, photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML, reply_markup=inline.get_allow_kb(mess.from_user.id))
     # await send_request({
     #     'to_id': 1086904500,
     #     'from_id': mess.from_user.id,

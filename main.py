@@ -1,14 +1,13 @@
+import asyncio
+from config import TOKEN
 from filters.isRegistered import isRegistered
 from middlewares.db import DatabaseSession
-import asyncio
-from aiogram import Bot, Dispatcher, types
+from aiogram import F, Bot, Dispatcher, types
 from aiogram.filters import CommandStart, Command
 from handlers.profile import register_router
 from handlers.search import search_router
 from db.engine import create_db, session_maker
 from kbds import reply
-from aiogram import F
-from config import TOKEN
 from utils.search import set_is_demo
 
 bot = Bot(token=TOKEN)

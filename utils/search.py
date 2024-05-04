@@ -1,10 +1,9 @@
 import json
-from sqlalchemy import and_, or_, select, func
-from db.orm_query import get_user, get_users
-from schemas.Profile import Profile
 from typing import List
-from sqlalchemy.ext.asyncio import AsyncSession
+from db.orm_query import get_user, get_users
 from db.models import Profile
+from sqlalchemy import and_, or_, select, func  
+from sqlalchemy.ext.asyncio import AsyncSession
 from utils.get_distance import get_distance
 from utils.get_hobbies_prop import get_hobbies_prop
 
