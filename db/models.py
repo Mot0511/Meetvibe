@@ -19,9 +19,7 @@ class Profile(Base):
     description: Mapped[str] = mapped_column(String(150))
     photo: Mapped[str] = mapped_column(String(150), nullable=False)
 
-class Request(Base):
-    __tablename__ = 'request'
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    to_id: Mapped[int] = mapped_column(nullable=False)
-    from_id: Mapped[int] = mapped_column(nullable=False)
+# class Stats(Base):
+#     __tabelname__ = 'stats'
+    
+#     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

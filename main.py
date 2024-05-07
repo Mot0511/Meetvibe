@@ -6,6 +6,7 @@ from aiogram import F, Bot, Dispatcher, types
 from aiogram.filters import CommandStart, Command
 from handlers.profile import register_router
 from handlers.search import search_router
+from handlers.stats import stats_router
 from db.engine import create_db, session_maker
 from kbds import reply
 from utils.search import set_is_demo
@@ -29,6 +30,7 @@ async def demo(mess: types.Message):
 
 dp.include_router(register_router)
 dp.include_router(search_router)
+dp.include_router(stats_router)
 
 async def on_startup():
     # await drop_db()

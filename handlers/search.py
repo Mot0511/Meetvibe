@@ -7,7 +7,6 @@ from aiogram.fsm.context import FSMContext
 from kbds import reply, inline
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.orm_query import get_user
-from db.orm_query import send_request
 from utils.get_distance import get_distance
 from utils.get_info import get_info
 from utils.search import search

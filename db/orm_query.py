@@ -1,7 +1,6 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.models import Profile
-from db.models import Request
 
 async def add_user(session: AsyncSession, data):
     obj = Profile(
@@ -50,7 +49,7 @@ async def get_all_ids(session: AsyncSession):
     data = await session.execute(query)
     return data.scalars().all()
 
-async def send_request(data, session: AsyncSession):
-    obj = Request(**data)
-    session.add(obj)
-    await session.commit()
+async def get_users_count(session: AsyncSession):
+    query = text("SELECT count(*) FROM profile")
+    data = await session.execute(query)
+    return data.scalar()
