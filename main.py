@@ -9,22 +9,26 @@ from handlers.search import search_router
 from handlers.stats import stats_router
 from db.engine import create_db, session_maker
 from kbds import reply
+from aiogram.fsm.context import FSMContext
 from utils.search import set_is_demo
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 @dp.message(CommandStart(), isRegistered(session_maker()))
-async def start(mess: types.Message):
+async def start(mess: types.Message, state: FSMContext):
     set_is_demo(False)
+    await state.clear()
     await mess.answer(text='Привет! Meetvibe - это бот для знакомств по интересам', reply_markup=reply.kb_menu)
 
 @dp.message((F.text == 'Главное меню') | (F.text == 'Выйти'))
-async def main_menu(mess: types.Message):
+async def main_menu(mess: types.Message, state: FSMContext):
+    await state.clear()
     await mess.answer(text='Главное меню:', reply_markup=reply.kb_menu)
 
 @dp.message(Command('demo'))
-async def demo(mess: types.Message):
+async def demo(mess: types.Message, state: FSMContext):
+    await state.clear()
     set_is_demo(True)
     await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
 
