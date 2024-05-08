@@ -19,21 +19,24 @@ class QueueState(StatesGroup):
     current_user = State()
     num = State()
 
+# Search handlers
 @search_router.message(F.text == 'Начать поиск')
 async def start_search(mess: types.Message):
     await mess.answer(text='Выбери пол', reply_markup=reply.kb_gender)
     
 @search_router.message((F.text == 'Мужской') | (F.text == 'Женский'))
 async def start_search(mess: types.Message, session: AsyncSession, state: FSMContext):
-    users = await search(mess.from_user.id, mess.text, session)
+    users = await search(mess.from_user.id, mess.text, session)  # getting users
     
     if not users:
         await mess.answer(text='Нет подходящих пользователей, можешь попробовать изменить критерии поиска', reply_markup=reply.kb_menu)
 
     await state.update_data(users=users, num=0)
 
+    # Showing person
     await show_person(users[0], mess, state)
 
+# Handler of allowing person
 @search_router.message(F.text == '✅')
 async def allow(mess: types.Message, state: FSMContext, session: AsyncSession):
     queue_data = await state.get_data()
@@ -49,6 +52,7 @@ async def allow(mess: types.Message, state: FSMContext, session: AsyncSession):
     # }, session)
     await next(mess, state)
 
+# Handler of rejecting person
 @search_router.message(F.text == '❌')
 async def next(mess: types.Message, state: FSMContext):
     queue_state = await state.get_data()
@@ -65,19 +69,22 @@ async def next(mess: types.Message, state: FSMContext):
     await state.update_data(num=num)
     await show_person(users[num], mess, state)
 
+# Callback handler of allowing person
 @search_router.callback_query(F.data.startswith('allow_'))
 async def callback_allow(callback: types.CallbackQuery, session: AsyncSession):
+    # Getting info
     user_id1 = callback.data.split('_')[1]
     user_id2 = callback.from_user.id
     user1 = await get_user(session, user_id=user_id1)
     user2 = await get_user(session, user_id=user_id2)
 
+    # Message of pair for first person
     await callback.message.answer(text=f'\
 <b>Пара создана:</b>\n\
 <a href="tg://user?id={user_id1}">{user1.name}</a> - \
 <a href="tg://user?id={user_id2}">{user2.name}</a>', parse_mode='html')
     
-    
+    # Message of pair for second person
     await bot.send_message(user_id1, text=f'\
 <b>Пара создана:</b>\n\
 <a href="tg://user?id={user_id2}">{user2.name}</a> - \
@@ -85,11 +92,12 @@ async def callback_allow(callback: types.CallbackQuery, session: AsyncSession):
 
     await callback.answer()
 
+# Callback handler of rejecting person
 @search_router.callback_query(F.data == 'reject')
 async def callback_reject(callback: types.CallbackQuery):
     await callback.message.delete()
 
-
+# Function for showing person
 async def show_person(user, mess: types.Message, state: FSMContext):
     await state.update_data(current_user=user)
     await mess.answer_photo(photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML, reply_markup=reply.kb_select)

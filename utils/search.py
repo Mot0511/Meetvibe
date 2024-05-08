@@ -7,29 +7,35 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from utils.get_distance import get_distance
 from utils.get_hobbies_prop import get_hobbies_prop
 
+# State and function for demo mode
 isDemo = False
-
 def set_is_demo(mode):
     global isDemo
     isDemo = mode
 
+# Main search code
 async def search(id: int, gender: str, session: AsyncSession):
     global isDemo
+    # Getting info about user
     userdata = await get_user(session, id)
     age = userdata.age
     city = userdata.city
 
+    # Building query for seacrhing
     query = select(Profile).order_by(func.random()).where( and_(Profile.gender == gender, Profile.age >= (age - 2), Profile.age <= (age + 2), Profile.city == city, Profile.user_id != id))
     if isDemo:
-        query = query.where(or_(Profile.user_id == 1, Profile.user_id == 1275580390))
+        query = query.where(or_(Profile.user_id == 1, Profile.user_id == 1275580390))  # for demo mode
     else:
-        query = query.where(and_(Profile.user_id != 1, Profile.user_id != 1275580390))
+        query = query.where(and_(Profile.user_id != 1, Profile.user_id != 1275580390))  # for normal mode
 
+    # Getting users
     users = await get_users(session, query)
 
+    # Adding distances and hobbies props for users
     users = add_distances(userdata, users)
     users = add_hobbies_props(userdata, users)
 
+    # Sorting users
     users_my_school = sort([user for user in users if user.school == userdata.school])
     users_other_school = sort([user for user in users if not user.school == userdata.school])
     
@@ -37,6 +43,7 @@ async def search(id: int, gender: str, session: AsyncSession):
 
     return users_my_school
 
+# Function for sorting
 def sort(users):
     N = len(users)
 
@@ -47,6 +54,7 @@ def sort(users):
 
     return users
 
+# Function for adding hobbies props
 def add_hobbies_props(userdata, users):
     hobbies1 = set(json.loads(userdata.hobbies))
     
@@ -59,6 +67,7 @@ def add_hobbies_props(userdata, users):
     
     return res
 
+# Function for adding distances
 def add_distances(userdata, users):
     res = []
     for user in users:

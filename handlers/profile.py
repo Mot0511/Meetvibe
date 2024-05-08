@@ -14,6 +14,7 @@ from utils.get_info import get_info
 
 register_router = Router()
 
+# My profile handler
 @register_router.message(F.text == 'Моя анкета')
 async def profile(mess: types.Message, session: AsyncSession):
     profile = await get_user(session, mess.from_user.id)
@@ -21,6 +22,7 @@ async def profile(mess: types.Message, session: AsyncSession):
 
     await mess.answer_photo(photo=profile.photo, caption=get_info(profile), parse_mode=ParseMode.HTML, reply_markup=reply.get_keyboard('Изменить анкету', 'Главное меню'))
 
+# State for user data
 class Profile(StatesGroup):
     user_id = State()
     name = State()
@@ -34,11 +36,13 @@ class Profile(StatesGroup):
     description = State()
     isEditing = State(state=False)
 
+# Reset state
 @register_router.message(Command('reset'))
 async def name(mess: types.Message, state: FSMContext):
     await state.clear()
     await mess.answer(text='Состояние сброшено')
 
+# Start handler for unregistered user
 @register_router.message(CommandStart())
 async def start(mess: types.Message, state: FSMContext):
     await mess.answer(text='Привет! Meetvibe - это бот для знакомств по интересам', reply_markup=reply.kb_menu)
@@ -48,6 +52,7 @@ async def start(mess: types.Message, state: FSMContext):
     await state.update_data(isEditing=False)
     await state.set_state(Profile.name)
 
+# Handlers for getting user data
 @register_router.message(StateFilter(None), F.text == 'Изменить анкету')
 async def name(mess: types.Message, state: FSMContext):
     await state.update_data(isEditing=True)
