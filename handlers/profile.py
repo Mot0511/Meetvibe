@@ -106,7 +106,7 @@ async def school(mess: types.Message, state: FSMContext):
     else:
         await state.update_data(school='')
 
-    await mess.answer(text='Какие у тебя увлечения? (перечисли через запятую)', reply_markup=reply.remove)
+    await mess.answer(text='Какие у тебя увлечения? (перечисли через запятую)\n<i>Например: шахматы, велосипед, музыка</i>', reply_markup=reply.remove, parse_mode=ParseMode.HTML)
     await state.set_state(Profile.hobbies)
 
 

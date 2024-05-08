@@ -37,9 +37,9 @@ async def demo(mess: types.Message, state: FSMContext):
     await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
 
 # Including routers
+dp.include_router(stats_router)
 dp.include_router(register_router)
 dp.include_router(search_router)
-dp.include_router(stats_router)
 
 # Creating bd tables on startup
 async def on_startup():
