@@ -76,7 +76,7 @@ async def age(mess: types.Message, state: FSMContext):
 
 @register_router.message(Profile.gender, F.text)
 async def gender(mess: types.Message, state: FSMContext):
-    await state.update_data(gender=mess.text)
+    await state.update_data(gender=mess.text.capitalize())
 
     await mess.answer(text='В каком городе ты живешь?', reply_markup=reply.kb_location)
     await mess.answer(text='Ты можешь отправить свою геопозицию для подбора людей ближе к тебе')
