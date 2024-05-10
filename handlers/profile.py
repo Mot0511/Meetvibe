@@ -84,7 +84,7 @@ async def gender(mess: types.Message, state: FSMContext):
 
 @register_router.message(Profile.city, F.text)
 async def city(mess: types.Message, state: FSMContext):
-    await state.update_data(city=mess.text)
+    await state.update_data(city=mess.text.capitalize())
     await state.update_data(location='')
 
     await mess.answer(text='В какой школе ты учишься? (номер школы или аббревитаруа)\nЭто можно указать для более точного поиска.', reply_markup=reply.kb_skip)
@@ -102,7 +102,7 @@ async def location(mess: types.Message, state: FSMContext):
 @register_router.message(Profile.school, F.text)
 async def school(mess: types.Message, state: FSMContext):
     if not mess.text == 'Пропустить':
-        await state.update_data(school=int(mess.text))
+        await state.update_data(school=str(mess.text))
     else:
         await state.update_data(school='')
 
