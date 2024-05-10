@@ -1,4 +1,7 @@
 import asyncio
+from profile import Profile
+
+from sqlalchemy import update
 from config import TOKEN
 from filters.isRegistered import isRegistered
 from middlewares.db import DatabaseSession
@@ -35,6 +38,25 @@ async def demo(mess: types.Message, state: FSMContext):
     await state.clear()
     set_is_demo(True)
     await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
+
+@dp.message(Command('fix'))
+async def fix(mess, session):
+    query1 = update(Profile).where(Profile.user_id == 1194825216).values(
+        gender = 'Женский'
+    )
+    query2 = update(Profile).where(Profile.user_id == 1351119439).values(
+        city = 'Киров'
+    )
+    query3 = update(Profile).where(Profile.user_id == 945631080).values(
+        city = 'Киров'
+    )
+    await session.execute(query1)
+    await session.execute(query2)
+    await session.execute(query3)
+    await session.commit()
+
+    await mess.answer(text='Fixed')
+
 
 # Including routers
 dp.include_router(stats_router)
