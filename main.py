@@ -1,5 +1,5 @@
 import asyncio
-from profile import Profile
+from db.models import Profile
 
 from sqlalchemy import update
 from config import TOKEN
