@@ -42,7 +42,7 @@ async def allow(mess: types.Message, state: FSMContext, session: AsyncSession):
     queue_data = await state.get_data()
     current_user = queue_data['current_user']
     user = await get_user(session, mess.from_user.id)
-    user.distance = get_distance(json.loads(user.location), json.loads(current_user.location))
+    user.distance = get_distance(json.loads(user.location), json.loads(current_user.location)) if current_user.location else 12000000
 
     await bot.send_message(current_user.user_id, text='<b>Ты кому-то понравился(ась)</b>:', parse_mode=ParseMode.HTML)
     await bot.send_photo(current_user.user_id, photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML, reply_markup=inline.get_allow_kb(mess.from_user.id))

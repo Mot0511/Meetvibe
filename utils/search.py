@@ -26,8 +26,8 @@ async def search(id: int, gender: str, session: AsyncSession):
     if isDemo:
         query = query.where(or_(Profile.user_id == 1, Profile.user_id == 1275580390))  # for demo mode
     else:
-        query = query.where(and_(Profile.user_id != 1))  # for normal mode
-# , Profile.user_id != 1275580390
+        query = query.where(and_(Profile.user_id != 1, Profile.user_id != 1275580390))  # for normal mode
+
     # Getting users
     users = await get_users(session, query)
 
