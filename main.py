@@ -1,5 +1,8 @@
 import asyncio
+
+from sqlalchemy import update
 from config import TOKEN
+from db.models import Profile
 from filters.isRegistered import isRegistered
 from middlewares.db import DatabaseSession
 from aiogram import F, Bot, Dispatcher, types
@@ -35,6 +38,16 @@ async def demo(mess: types.Message, state: FSMContext):
     await state.clear()
     set_is_demo(True)
     await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
+
+@dp.message(Command('fix'))
+async def demo(mess, session):
+   query = update(Profile).where(Profile.user_id == 1911056566).values(
+       city = 'Киров'
+   )
+   await session.execute(query)
+   await session.commit()
+
+   await mess.answer(text='Fixed')
 
 # Including routers
 dp.include_router(stats_router)
