@@ -4,6 +4,7 @@ from sqlalchemy import update
 from config import TOKEN
 from db.models import Profile
 from filters.isRegistered import isRegistered
+from middlewares.add_username import AddUsername
 from middlewares.db import DatabaseSession
 from aiogram import F, Bot, Dispatcher, types
 from aiogram.filters import CommandStart, Command
@@ -22,6 +23,7 @@ dp = Dispatcher()
 # Start handler
 @dp.message(CommandStart(), isRegistered(session_maker()))
 async def start(mess: types.Message, state: FSMContext):
+    print(mess.from_user.url)
     set_is_demo(False)
     await state.clear()
     await mess.answer(text='Привет! Meetvibe - это бот для знакомств по интересам', reply_markup=reply.kb_menu)
@@ -68,8 +70,9 @@ async def main():
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 
-    # Including middleware for session
-    dp.update.middleware(DatabaseSession(session_maker=session_maker))
+    # Including middlewares
+    dp.update.middleware(DatabaseSession(session_maker=session_maker))  # for sessions
+    dp.update.middleware(AddUsername(session_maker=session_maker))  # for adding usernames
 
     # Startng bot
     await dp.start_polling(bot)

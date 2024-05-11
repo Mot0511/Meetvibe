@@ -25,6 +25,7 @@ async def profile(mess: types.Message, session: AsyncSession):
 # State for user data
 class Profile(StatesGroup):
     user_id = State()
+    username = State()
     name = State()
     age = State()
     gender = State()
@@ -135,6 +136,7 @@ async def photo(mess: types.Message, state: FSMContext, session: AsyncSession):
     await state.update_data(photo=mess.photo[-1].file_id)
 
     await state.update_data(user_id=mess.from_user.id)
+    await state.update_data(username=mess.from_user.username)
     data = await state.get_data()
 
     if (data['isEditing'] == True):

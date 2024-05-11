@@ -9,6 +9,7 @@ class Profile(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column()
+    username: Mapped[str] = mapped_column(String(150))
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     age: Mapped[int] = mapped_column(Numeric(100), nullable=False)
     gender: Mapped[str] = mapped_column(String(150), nullable=False)
