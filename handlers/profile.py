@@ -102,7 +102,7 @@ async def location(mess: types.Message, state: FSMContext):
 @register_router.message(Profile.school, F.text)
 async def school(mess: types.Message, state: FSMContext):
     if not mess.text == 'Пропустить':
-        await state.update_data(school=str(mess.text))
+        await state.update_data(school=(mess.text if mess.text.isdigit() else mess.text.upper()))
     else:
         await state.update_data(school='')
 
