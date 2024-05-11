@@ -45,7 +45,7 @@ async def allow(mess: types.Message, state: FSMContext, session: AsyncSession):
     user.distance = get_distance(json.loads(user.location), json.loads(current_user.location)) if current_user.location else 12000000
 
     await bot.send_message(current_user.user_id, text='<b>Ты кому-то понравился(ась)</b>:', parse_mode=ParseMode.HTML)
-    await bot.send_photo(current_user.user_id, photo=user.photo, caption=get_info(user, show_username=True), parse_mode=ParseMode.HTML)
+    await bot.send_photo(current_user.user_id, photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML, reply_markup=inline.get_allow_kb(mess.from_user.id))
     # await send_request({
     #     'to_id': 1086904500,
     #     'from_id': mess.from_user.id,
@@ -70,34 +70,34 @@ async def next(mess: types.Message, state: FSMContext):
     await show_person(users[num], mess, state)
 
 # Callback handler of allowing person
-# @search_router.callback_query(F.data.startswith('allow_'))
-# async def callback_allow(callback: types.CallbackQuery, session: AsyncSession):
-#     # Getting info
-#     user_id1 = callback.data.split('_')[1]
-#     user_id2 = callback.from_user.id
-#     user1 = await get_user(session, user_id=user_id1)
-#     user2 = await get_user(session, user_id=user_id2)
+@search_router.callback_query(F.data.startswith('allow_'))
+async def callback_allow(callback: types.CallbackQuery, session: AsyncSession):
+    # Getting info
+    user_id1 = callback.data.split('_')[1]
+    user_id2 = callback.from_user.id
+    user1 = await get_user(session, user_id=user_id1)
+    user2 = await get_user(session, user_id=user_id2)
 
     
-#     # Message of pair for first person
-#     await callback.message.answer(text=f'\
-# <b>Пара создана:</b>\n\
-# {user1.name} - @{user1.username}n\
-# {user2.name} - @{user2.username}n', parse_mode='html')
+    # Message of pair for first person
+    await callback.message.answer(text=f'\
+<b>Пара создана:</b>\n\
+{user1.name} - @{(user1.username if user1.username else user1.user_id)}\n\
+{user2.name} - @{(user2.username if user2.username else user2.user_id)}', parse_mode='html')
     
 
-#     # Message of pair for second person
-#     await bot.send_message(user_id1, text=f'\
-# <b>Пара создана:</b>\n\
-# {user2.name} - @{user2.username}n\
-# {user1.name} - @{user1.username}n', parse_mode='html')
+    # Message of pair for second person
+    await bot.send_message(user_id1, text=f'\
+<b>Пара создана:</b>\n\
+{user2.name} - @{(user2.username if user2.username else user2.user_id)}\n\
+{user1.name} - @{(user1.username if user1.username else user1.user_id)}', parse_mode='html')
 
-#     await callback.answer()
+    await callback.answer()
 
-# # Callback handler of rejecting person
-# @search_router.callback_query(F.data == 'reject')
-# async def callback_reject(callback: types.CallbackQuery):
-#     await callback.message.delete()
+# Callback handler of rejecting person
+@search_router.callback_query(F.data == 'reject')
+async def callback_reject(callback: types.CallbackQuery):
+    await callback.message.delete()
 
 # Function for showing person
 async def show_person(user, mess: types.Message, state: FSMContext):

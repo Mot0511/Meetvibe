@@ -17,7 +17,8 @@ class AddUsername(BaseMiddleware):
         data: Dict[str, Any]
     ):
         async with self.session_maker() as session:
-            
+            if not hasattr(event.message, 'from_user'): return await handler(event, data)
+
             query = update(Profile).where(Profile.user_id == event.message.from_user.id).values(
                 username = event.message.from_user.username
             )
