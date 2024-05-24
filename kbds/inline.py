@@ -9,3 +9,11 @@ def get_allow_kb(user_id):
     ])
 
     return kb_allow
+
+def get_link(text, link):
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=text, url=link),
+        ]
+    ])
+    return kb

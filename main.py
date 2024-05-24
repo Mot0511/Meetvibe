@@ -1,7 +1,7 @@
 import asyncio
 
 from sqlalchemy import update
-from config import TOKEN
+from config import DEV, TOKEN
 from db.models import Profile
 from filters.isRegistered import isRegistered
 from middlewares.add_username import AddUsername
@@ -17,7 +17,7 @@ from aiogram.fsm.context import FSMContext
 from utils.search import set_is_demo
 
 # Bot and dispatcher initialization
-bot = Bot(token=TOKEN)
+bot = Bot(token=DEV)
 dp = Dispatcher()
 
 # Start handler
@@ -27,6 +27,10 @@ async def start(mess: types.Message, state: FSMContext):
     set_is_demo(False)
     await state.clear()
     await mess.answer(text='Привет! Meetvibe - это бот для знакомств по интересам', reply_markup=reply.kb_menu)
+
+@dp.message(F.photo)
+async def ad(mess):
+    print(mess.photo[-1].file_id)
 
 # Menu handler
 @dp.message((F.text == 'Главное меню') | (F.text == 'Выйти'))
