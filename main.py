@@ -28,10 +28,6 @@ async def start(mess: types.Message, state: FSMContext):
     await state.clear()
     await mess.answer(text='Привет! Meetvibe - это бот для знакомств по интересам', reply_markup=reply.kb_menu)
 
-@dp.message(F.photo)
-async def ad(mess):
-    print(mess.photo[-1].file_id)
-
 # Menu handler
 @dp.message((F.text == 'Главное меню') | (F.text == 'Выйти'))
 async def main_menu(mess: types.Message, state: FSMContext):
