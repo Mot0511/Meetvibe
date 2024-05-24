@@ -17,7 +17,7 @@ from aiogram.fsm.context import FSMContext
 from utils.search import set_is_demo
 
 # Bot and dispatcher initialization
-bot = Bot(token=DEV)
+bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 # Start handler
