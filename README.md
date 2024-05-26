@@ -8,4 +8,4 @@
 - Aiogram3
 - SQLAlchemy
   
-**Ссылка на бота** - https://t.me/meetvibe_bot
+**Ссылка на бота - https://t.me/meetvibe_bot**
