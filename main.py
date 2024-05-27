@@ -45,20 +45,6 @@ async def demo(mess: types.Message, state: FSMContext):
 
 @dp.message(Command('fix'))
 async def demo(mess, session):
-   obj = Profile(
-       user_id = 1634061373,
-       name = 'Пидор',
-       age = 14,
-       gender = 'Мужской',
-       city = 'Киров',
-       school = 25,
-       hobbies = '["\u0448\u0430\u0445\u043c\u0430\u0442\u044b", "\u0433\u0438\u0442\u0430\u0440\u0430", "\u0445\u0437", "\u043a\u043e\u043d\u0435\u0447\u043d\u043e", "\u0441\u0430\u043c\u043e\u043a\u0430\u0442"]',
-       description = 'Я тупой,но прикольный(наверное)',
-       photo = 'AgACAgIAAxkBAAJB8mZTeBw6e_tAX2__KlHuAvFQp1hWAAI42DEbG0CYShU7e-BJ9mrGAQADAgADeQADNQQ',
-       username = 'Gitler1109',
-       location = ''
-
-   )
    obj2 = Profile(
        user_id = 6243330468,
        name = 'Vlad',
@@ -69,11 +55,9 @@ async def demo(mess, session):
        school = 25,
        hobbies = '["\u043a\u0430\u0442\u0430\u044e\u0441\u044c \u043d\u0430 \u043f\u0438\u0442\u0435"]',
        description = '',
-       photo = 'AgACAgIAAxkBAAI7n2ZQf8ziUgLOCSEdiRkLh_PuEvQgAAIC3DEbZdyJSgE8t1prFHeFAQADAgADeQADNQQ ',
+       photo = 'AgACAgIAAxkBAAI7n2ZQf8ziUgLOCSEdiRkLh_PuEvQgAAIC3DEbZdyJSgE8t1prFHeFAQADAgADeQADNQQ',
        username = 'Abobys228853'
    )
-
-   session.add(obj)
    session.add(obj2)
    await session.commit()
 
