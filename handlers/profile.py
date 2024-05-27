@@ -1,17 +1,19 @@
 import json
-from aiogram import Router, F
+from aiogram import Bot, Router, F
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart, Command
 from aiogram import types
 from aiogram.enums.parse_mode import ParseMode
+from config import DEV, ISDEV, TOKEN
 from db.orm_query import add_user, edit_user, get_user
 from kbds import reply
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils.get_city import get_city
 from utils.get_info import get_info
 
+bot = Bot(token=(DEV if ISDEV=='TRUE' else TOKEN))
 register_router = Router()
 
 # My profile handler
@@ -150,3 +152,9 @@ async def photo(mess: types.Message, state: FSMContext, session: AsyncSession):
         await mess.answer(text='Анкета создана', reply_markup=reply.kb_menu)
     
     await state.clear()
+
+    # Showing new person to admin (me)
+    user = await get_user(session, data['user_id'])
+    user.distance = 12000000
+    await bot.send_message(chat_id=1086904500, text='<b>Новый пользователь:</b>', parse_mode=ParseMode.HTML)
+    await bot.send_photo(chat_id=1086904500, photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML)

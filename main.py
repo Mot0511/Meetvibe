@@ -1,7 +1,7 @@
 import asyncio
 
 from sqlalchemy import update
-from config import DEV, TOKEN
+from config import DEV, ISDEV, TOKEN
 from db.models import Profile
 from filters.isRegistered import isRegistered
 from middlewares.add_username import AddUsername
@@ -19,9 +19,7 @@ from utils.search import set_is_demo
 
 # Bot and dispatcher initialization
 
-devMode = True
-
-bot = Bot(token=(DEV if devMode else TOKEN))
+bot = Bot(token=(DEV if ISDEV=='TRUE' else TOKEN))
 dp = Dispatcher()
 
 # Start handler

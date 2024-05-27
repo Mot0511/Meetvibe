@@ -1,6 +1,6 @@
 import json
 import random
-from config import TOKEN
+from config import DEV, ISDEV, TOKEN
 from aiogram import Bot, Router, F, types
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.state import State, StatesGroup
@@ -12,7 +12,7 @@ from utils.get_distance import get_distance
 from utils.get_info import get_info
 from utils.search import search
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=(DEV if ISDEV=='TRUE' else TOKEN))
 search_router = Router()
 
 class QueueState(StatesGroup):
