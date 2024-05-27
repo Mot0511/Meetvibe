@@ -102,11 +102,11 @@ async def callback_reject(callback: types.CallbackQuery):
 
 # Function for showing person
 async def show_person(user, mess: types.Message, state: FSMContext):
-    if random.randint(0, 15) == 1:
-        ad_id = 'AgACAgIAAxkBAAIz92ZQJlqvg-rOkcyf1X7rFM01E9IKAAIQ3jEbssSJSh5UNasHK7JkAQADAgADeAADNQQ'
-        ad_id_demo = 'AgACAgIAAxkBAAIUM2ZQLp8fJQQdcI3BzAZ3lZHHOL1yAAIQ3jEbssSJSn9fZcCs-lhHAQADAgADeAADNQQ'
-        await mess.answer_photo(photo=ad_id, caption='Подпишись, пожалуйста, на ТЛШ', reply_markup=inline.get_link('Перейти в канал', 'https://t.me/tls2543'))
-        return
+    # if random.randint(0, 15) == 1:
+    #     ad_id = 'AgACAgIAAxkBAAIz92ZQJlqvg-rOkcyf1X7rFM01E9IKAAIQ3jEbssSJSh5UNasHK7JkAQADAgADeAADNQQ'
+    #     ad_id_demo = 'AgACAgIAAxkBAAIUM2ZQLp8fJQQdcI3BzAZ3lZHHOL1yAAIQ3jEbssSJSn9fZcCs-lhHAQADAgADeAADNQQ'
+    #     await mess.answer_photo(photo=ad_id, caption='Подпишись, пожалуйста, на ТЛШ', reply_markup=inline.get_link('Перейти в канал', 'https://t.me/tls2543'))
+    #     return
     
     await state.update_data(current_user=user)
     await mess.answer_photo(photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML, reply_markup=reply.kb_select)

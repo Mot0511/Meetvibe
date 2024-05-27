@@ -9,6 +9,7 @@ from utils.get_hobbies_prop import get_hobbies_prop
 
 # State and function for demo mode
 isDemo = False
+
 def set_is_demo(mode):
     global isDemo
     isDemo = mode

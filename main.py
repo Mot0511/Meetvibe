@@ -14,10 +14,14 @@ from handlers.stats import stats_router
 from db.engine import create_db, session_maker
 from kbds import reply
 from aiogram.fsm.context import FSMContext
+# from middlewares.get_album import AlbumMiddleware
 from utils.search import set_is_demo
 
 # Bot and dispatcher initialization
-bot = Bot(token=TOKEN)
+
+devMode = True
+
+bot = Bot(token=(DEV if devMode else TOKEN))
 dp = Dispatcher()
 
 # Start handler
@@ -41,15 +45,15 @@ async def demo(mess: types.Message, state: FSMContext):
     set_is_demo(True)
     await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
 
-@dp.message(Command('fix'))
-async def demo(mess, session):
-   query = update(Profile).where(Profile.user_id == 1911056566).values(
-       city = 'Киров'
-   )
-   await session.execute(query)
-   await session.commit()
+# @dp.message(Command('fix'))
+# async def demo(mess, session):
+#    query = update(Profile).where(Profile.user_id == 1911056566).values(
+#        city = 'Киров'
+#    )
+#    await session.execute(query)
+#    await session.commit()
 
-   await mess.answer(text='Fixed')
+#    await mess.answer(text='Fixed')
 
 # Including routers
 dp.include_router(stats_router)
@@ -73,6 +77,7 @@ async def main():
     # Including middlewares
     dp.update.middleware(DatabaseSession(session_maker=session_maker))  # for sessions
     dp.update.middleware(AddUsername(session_maker=session_maker))  # for adding usernames
+    # dp.update.middleware(AlbumMiddleware())  # for getting albums
 
     # Startng bot
     await dp.start_polling(bot)

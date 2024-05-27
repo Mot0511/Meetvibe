@@ -129,7 +129,10 @@ async def hobbies(mess: types.Message, state: FSMContext):
 
     await mess.answer(text='Отправь свое фото', reply_markup=reply.remove)
     await state.set_state(Profile.photo)
-    
+
+@register_router.message(Profile.photo, F.media_group_id)
+async def photo(mess: types.Message):
+    await mess.answer('Пока можно загружать только одно фото')
 
 @register_router.message(Profile.photo, F.photo)
 async def photo(mess: types.Message, state: FSMContext, session: AsyncSession):
