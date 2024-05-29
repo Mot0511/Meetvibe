@@ -150,11 +150,12 @@ async def photo(mess: types.Message, state: FSMContext, session: AsyncSession):
     else:
         await add_user(session, data)
         await mess.answer(text='Анкета создана', reply_markup=reply.kb_menu)
+        # Showing new person to admin (me)
+        user = await get_user(session, data['user_id'])
+        user.distance = 12000000
+        await bot.send_message(chat_id=1086904500, text='<b>Новый пользователь:</b>', parse_mode=ParseMode.HTML)
+        await bot.send_photo(chat_id=1086904500, photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML)
     
     await state.clear()
 
-    # Showing new person to admin (me)
-    user = await get_user(session, data['user_id'])
-    user.distance = 12000000
-    await bot.send_message(chat_id=1086904500, text='<b>Новый пользователь:</b>', parse_mode=ParseMode.HTML)
-    await bot.send_photo(chat_id=1086904500, photo=user.photo, caption=get_info(user), parse_mode=ParseMode.HTML)
+    
