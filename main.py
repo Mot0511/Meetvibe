@@ -43,26 +43,6 @@ async def demo(mess: types.Message, state: FSMContext):
     set_is_demo(True)
     await mess.answer(text='Демо режим включен', reply_markup=reply.kb_menu)
 
-@dp.message(Command('fix'))
-async def demo(mess, session):
-   obj2 = Profile(
-       user_id = 6243330468,
-       name = 'Vlad',
-       age = 14,
-       gender = 'Мужской',
-       city = 'Киров',
-       location = '[58.596025, 49.602337]',
-       school = 25,
-       hobbies = '["\u043a\u0430\u0442\u0430\u044e\u0441\u044c \u043d\u0430 \u043f\u0438\u0442\u0435"]',
-       description = '',
-       photo = 'AgACAgIAAxkBAAI7n2ZQf8ziUgLOCSEdiRkLh_PuEvQgAAIC3DEbZdyJSgE8t1prFHeFAQADAgADeQADNQQ',
-       username = 'Abobys228853'
-   )
-   session.add(obj2)
-   await session.commit()
-
-   await mess.answer(text='Fixed')
-
 # Including routers
 dp.include_router(stats_router)
 dp.include_router(register_router)
